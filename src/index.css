@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.swiper-button-disabled {
+    opacity: 0 !important;
+}
+
+.c-scrollbar::-webkit-scrollbar {
+    @apply w-2;
+}
+.c-scrollbar::-webkit-scrollbar-track {
+    @apply rounded-full bg-white/10;
+}
+.c-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-white/30;
+}
+.c-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply rounded-full bg-white/60;
+}
