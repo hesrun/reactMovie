@@ -28,7 +28,7 @@ const FilmCarusel = ({ data, type }) => {
                     swiper.params.navigation.nextEl = nextRef.current;
                 }}
             >
-                {data.map((item) => (
+                {data?.map((item) => (
                     <SwiperSlide key={item.id} className="!w-45">
                         <Link
                             to={`${type}/${item.id}`}

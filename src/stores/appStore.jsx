@@ -15,7 +15,6 @@ class MoviesStore {
     nowPlayingFilms = [];
     topRatedFilms = [];
     upcomingFilms = [];
-    cartoonFilms = [];
     weeklyFilms = [];
 
     popularSeries = [];
@@ -51,12 +50,12 @@ class MoviesStore {
                 'nowPlayingFilms',
                 'topRatedFilms',
                 'upcomingFilms',
-                'cartoonFilms',
                 'weeklyFilms',
 
                 'popularSeries',
                 'onAirSeries',
                 'topRatedSeries',
+                'weeklySeries',
             ].includes(storeKey)
         ) {
             console.error(`Invalid type: ${storeKey}`);
