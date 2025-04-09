@@ -10,6 +10,9 @@ import Button from '../../components/ui/Button/Button';
 import { H1, H2 } from '../../components/ui/Title/Title';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { FaStar } from 'react-icons/fa';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
+import { GiFilmStrip } from 'react-icons/gi';
 
 const headerGet = {
     headers: {
@@ -63,17 +66,122 @@ const Movie = observer(({ type }) => {
         );
     }, [moviesStore.favorite, id]);
 
-    if (isLoading) return <p>Загрузка...</p>;
+    if (isLoading)
+        return (
+            <div>
+                <div className="-mt-4 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
+                    <div className="-mx-4 md:col-span-6 sm:mx-0 xl:col-span-4">
+                        <Skeleton
+                            className="!block aspect-2/3"
+                            baseColor="rgba(67, 56, 202, 0.2)"
+                            highlightColor="rgba(129, 140, 248, 0.3)"
+                            inline={true}
+                        />
+                    </div>
+                    <div className="md:col-span-6 xl:col-span-8">
+                        <div className="mb-4 md:mb-6">
+                            <Skeleton
+                                className="!block h-8 max-w-100"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                        </div>
+                        <div className="mb-4 md:mb-6">
+                            <Skeleton
+                                className="h-2 max-w-10/12"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                            />
+                            <Skeleton
+                                className="h-2 max-w-8/12"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                            />
+                            <Skeleton
+                                className="h-2 max-w-6/12"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                            />
+                        </div>
+                        <div className="mb-4 md:mb-8 flex flex-wrap gap-4">
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <Skeleton
+                                className="!block h-10 aspect-2/1"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                        </div>
+                        <div className="mb-4 md:mb-8">
+                            <Skeleton
+                                className="!block h-4 !w-20 !rounded-full mb-4"
+                                baseColor="rgba(67, 56, 202, 0.2)"
+                                highlightColor="rgba(129, 140, 248, 0.3)"
+                                inline={true}
+                            />
+                            <div className="flex flex-wrap gap-4">
+                                {Array(5)
+                                    .fill(0)
+                                    .map((_, item) => (
+                                        <Skeleton
+                                            className="!block h-8 aspect-3/1 !rounded-full"
+                                            baseColor="rgba(67, 56, 202, 0.2)"
+                                            highlightColor="rgba(129, 140, 248, 0.3)"
+                                            inline={true}
+                                        />
+                                    ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     if (error) return <p>{error}</p>;
     return (
         <>
-            <div className="-mt-4 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
-                <div className="-mx-4 mb-4 md:mb-16 md:col-span-6 sm:mx-0 xl:col-span-4">
-                    <img
-                        className="w-full"
-                        src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                        alt={movie.original_title}
-                    />
+            <div className="-mt-4 mb-4 md:mb-16 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
+                <div className="-mx-4 md:col-span-6 sm:mx-0 xl:col-span-4">
+                    {movie.poster_path ? (
+                        <img
+                            className="w-full"
+                            src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                            alt={movie.original_title}
+                        />
+                    ) : (
+                        <div className="aspect-2/3 bg-indigo-500/30 md:rounded-2xl flex">
+                            <GiFilmStrip className="m-auto text-6xl lg:text-8xl opacity-30" />
+                        </div>
+                    )}
                 </div>
                 <div className="md:col-span-6 xl:col-span-8">
                     <H1>
@@ -166,7 +274,10 @@ const Movie = observer(({ type }) => {
                             ))}
                         </ul>
                     </div>
-                    <Button onClick={toggleFavorite}>
+                    <Button
+                        className="w-full md:w-auto"
+                        onClick={toggleFavorite}
+                    >
                         {!isFavorite ? (
                             <>
                                 <MdFavoriteBorder className="text-xl" />
@@ -181,10 +292,12 @@ const Movie = observer(({ type }) => {
                     </Button>
                 </div>
             </div>
-            <div>
-                <H2>Top Billed Cast</H2>
-                <ActorsCarusel data={credits.cast.slice(0, 15)} />
-            </div>
+            {credits && (
+                <div>
+                    <H2>Top Billed Cast</H2>
+                    <ActorsCarusel data={credits.cast.slice(0, 15)} />
+                </div>
+            )}
         </>
     );
 });

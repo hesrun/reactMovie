@@ -53,7 +53,7 @@ const Series = observer(() => {
     return (
         <>
             <H2>{title}</H2>
-            <FilmGrid data={data} />
+            <FilmGrid data={data} loading={moviesStore.isLoading} />
             <div className="mt-8 max-w-80 mx-auto">
                 <Button onClick={() => setPage(page + 1)} className="w-full">
                     Show More

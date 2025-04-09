@@ -29,12 +29,12 @@ const ActorsCarusel = ({ data }) => {
                 className="!pb-4"
             >
                 {data.map((item) => (
-                    <SwiperSlide key={item.id} className="!w-45 md:!w-50">
-                        <div className="overflow-hidden bg-gray-600 rounded-2xl">
-                            <div className="aspect-2/3">
+                    <SwiperSlide key={item.id} className="!w-40 md:!w-45">
+                        <div className="rounded-2xl overflow-hidden bg-white/10 group">
+                            <div className="aspect-2/3 overflow-hidden">
                                 {item.profile_path ? (
                                     <img
-                                        className="rounded-2xl"
+                                        className="aspect-2/3 object-cover group-hover:scale-110 transition-transform"
                                         src={`https://image.tmdb.org/t/p/w300/${item.profile_path}`}
                                         alt={item.original_name}
                                     />

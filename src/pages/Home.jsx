@@ -9,6 +9,7 @@ const popularFilmsUrl = `${BASE_URL}/movie/popular`;
 const popularSeriesUrl = `${BASE_URL}/tv/popular`;
 const weeklyTopMoviesUrl = `${BASE_URL}/trending/movie/week`;
 const weeklyTopTVUrl = `${BASE_URL}/trending/tv/week`;
+
 const Home = observer(() => {
     useEffect(() => {
         moviesStore.fetchData(popularFilmsUrl, 'popularFilms', 'movie');
@@ -23,21 +24,25 @@ const Home = observer(() => {
             <FilmCarusel
                 data={moviesStore.weeklyFilms}
                 type="movie"
+                loading={moviesStore.isLoading}
             ></FilmCarusel>
             <H2>Wekly top TV Show</H2>
             <FilmCarusel
                 data={moviesStore.weeklySeries}
                 type="tv"
+                loading={moviesStore.isLoading}
             ></FilmCarusel>
             <H2>Popular Movies</H2>
             <FilmCarusel
                 data={moviesStore.popularFilms}
                 type="movie"
+                loading={moviesStore.isLoading}
             ></FilmCarusel>
             <H2>Popular TV Show</H2>
             <FilmCarusel
                 data={moviesStore.popularSeries}
                 type="tv"
+                loading={moviesStore.isLoading}
             ></FilmCarusel>
         </div>
     );

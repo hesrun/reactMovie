@@ -21,12 +21,12 @@ const Header = observer(() => {
     };
 
     const menuOpenClass = () => {
-        return !menuOpen ? 'hidden' : 'block';
+        return !menuOpen ? '-translate-x-full ' : 'translate-x-0';
     };
     menuOpenClass();
 
     return (
-        <header className="sticky top-0 z-20 bg-indigo-950">
+        <header className="sticky top-0 z-20 bg-indigo-950 ">
             <div className="container mx-auto flex h-[50px] md:h-[70px] items-center gap-4 relative px-4">
                 <button
                     onClick={menuOpenHandler}
@@ -62,7 +62,7 @@ const Header = observer(() => {
                     </svg>
                 </Link>
                 <div
-                    className={`fixed bg-indigo-950  top-[50px] left-0 bottom-0 z-100 md:z-auto w-full max-w-[300px] p-8 ${menuOpenClass()} md:block md:static md:p-0 md:ml-8`}
+                    className={`fixed bg-indigo-950  top-[50px] left-0 bottom-0 z-100 md:z-auto w-full max-w-[300px] p-8 ${menuOpenClass()} transition-transform md:transition-none md:translate-x-0 md:static md:p-0 md:ml-8`}
                 >
                     <div className="flex flex-col gap-4 md:flex-row">
                         <NavLink
