@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { IoMdClose } from 'react-icons/io';
-import { BASE_URL, API_KEY } from '../../../constants/constants';
+import { BASE_URL, GET_HEADER } from '../../../constants/constants';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaRegSadCry, FaStar } from 'react-icons/fa';
@@ -9,15 +9,8 @@ import { GiFilmStrip } from 'react-icons/gi';
 import { useRef } from 'react';
 import { LuLoaderCircle } from 'react-icons/lu';
 
-const headerGet = {
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`,
-    },
-};
-
-const movieUrl = 'https://api.themoviedb.org/3/search/movie';
-const tvUrl = 'https://api.themoviedb.org/3/search/tv';
+const movieUrl = `${BASE_URL}/search/movie`;
+const tvUrl = `${BASE_URL}/search/tv`;
 
 const Search = () => {
     const searchRef = useRef(null);
@@ -42,8 +35,8 @@ const Search = () => {
         try {
             setIsLoading(true);
             const [movieResponse, tvResponse] = await Promise.all([
-                axios.get(`${movieUrl}?query=${search}`, headerGet),
-                axios.get(`${tvUrl}?query=${search}`, headerGet),
+                axios.get(`${movieUrl}?query=${search}`, GET_HEADER),
+                axios.get(`${tvUrl}?query=${search}`, GET_HEADER),
             ]);
 
             const typedMovie = movieResponse.data.results.map((item) => {
@@ -59,7 +52,6 @@ const Search = () => {
                 };
             });
             setSearchResult([...typedMovie, ...typedTV]);
-            console.log(searchResult);
         } catch (error) {
             setError(error);
         } finally {
@@ -105,7 +97,7 @@ const Search = () => {
                             name=""
                             id=""
                             placeholder="Movie, Serials, TV Shows..."
-                            className="border-b border-white/30 w-full py-2 outline-none focus:border-white/70 transition-all"
+                            className="bg-white/20 w-full rounded-lg px-4 py-1 md:py-2 transition-all"
                         />
                         {searchResult?.length > 0 && (
                             <div className="fixed md:absolute bg-black/10 left-0 w-full backdrop-blur-2xl rounded-sm space-y-2 p-4 max-h-[50vh] overflow-auto c-scrollbar">

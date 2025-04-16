@@ -2,8 +2,14 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import { Outlet } from 'react-router-dom';
+import AuthModal from './AuthModal/AuthModal';
+import authStore from '../stores/authStore';
+import { useEffect } from 'react';
 
 const Layout = () => {
+    useEffect(() => {
+        authStore.checkAuth();
+    }, []);
     return (
         <>
             <Header></Header>
@@ -11,6 +17,7 @@ const Layout = () => {
                 <Outlet />
             </main>
             {/* <Footer /> */}
+            <AuthModal />
         </>
     );
 };

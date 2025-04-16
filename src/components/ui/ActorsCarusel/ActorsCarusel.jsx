@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 
 import React, { useRef } from 'react';
 import { CiUser } from 'react-icons/ci';
+import { Link } from 'react-router-dom';
 
 const ActorsCarusel = ({ data }) => {
     const prevRef = useRef(null);
@@ -30,7 +31,10 @@ const ActorsCarusel = ({ data }) => {
             >
                 {data.map((item) => (
                     <SwiperSlide key={item.id} className="!w-40 md:!w-45">
-                        <div className="rounded-2xl overflow-hidden bg-white/10 group">
+                        <Link
+                            to={`/persons/${item.id}`}
+                            className="block rounded-2xl overflow-hidden bg-white/10 group"
+                        >
                             <div className="aspect-2/3 overflow-hidden">
                                 {item.profile_path ? (
                                     <img
@@ -55,7 +59,7 @@ const ActorsCarusel = ({ data }) => {
                                     {item.character}
                                 </span>
                             </div>
-                        </div>
+                        </Link>
                     </SwiperSlide>
                 ))}
             </Swiper>

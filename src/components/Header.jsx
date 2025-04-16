@@ -1,12 +1,20 @@
 import { observer } from 'mobx-react-lite';
 import moviesStore from '../stores/appStore';
+import authStore from '../stores/authStore';
+import modalStore from '../stores/modalStore';
 
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { IoMenuOutline } from 'react-icons/io5';
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
+import {
+    MdFavorite,
+    MdFavoriteBorder,
+    MdLogin,
+    MdLogout,
+} from 'react-icons/md';
 import { Link, NavLink } from 'react-router-dom';
 import Search from './ui/Search/Search';
+import favoriteStore from '../stores/favoriteStore';
 
 const Header = observer(() => {
     const [menuOpen, setMenuOpen] = useState(false);
@@ -86,23 +94,52 @@ const Header = observer(() => {
                         >
                             Series
                         </NavLink>
+                        <NavLink
+                            onClick={() => setMenuOpen(false)}
+                            to="/persons"
+                            className={getNavLinkClass}
+                        >
+                            Persons
+                        </NavLink>
                     </div>
                 </div>
-                <Link
-                    to="/favorite"
-                    className="text-2xl ml-auto relative hover:text-red-700"
-                >
-                    {moviesStore.favorite.length > 0 ? (
-                        <>
-                            <MdFavorite className="text-red-700" />
-                            <span className="text-xs absolute bg-red-400 w-4 h-4 rounded-full text-center -right-2 -top-1">
-                                {moviesStore.favorite.length}
-                            </span>
-                        </>
+                <div className="ml-auto flex items-center">
+                    {authStore.isAuth ? (
+                        <button
+                            onClick={() => authStore.logOut()}
+                            title="log out"
+                            className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-1 cursor-pointer hover:bg-white/40"
+                        >
+                            {authStore.user.username}
+                            <MdLogout />
+                        </button>
                     ) : (
-                        <MdFavoriteBorder />
+                        <button
+                            onClick={() => modalStore.openModal()}
+                            className="text-2xl relative hover:text-red-700 cursor-pointer"
+                        >
+                            <MdLogin />
+                        </button>
                     )}
-                </Link>
+                </div>
+                {authStore.isAuth && (
+                    <Link
+                        to="/favorite"
+                        className="text-2xl relative hover:text-red-700"
+                    >
+                        {favoriteStore.favorites?.length > 0 ? (
+                            <>
+                                <MdFavorite className="text-red-700" />
+                                <span className="text-xs absolute bg-red-400 w-4 h-4 rounded-full text-center -right-2 -top-1">
+                                    {favoriteStore.favorites.length}
+                                </span>
+                            </>
+                        ) : (
+                            <MdFavoriteBorder />
+                        )}
+                    </Link>
+                )}
+
                 <Search />
             </div>
         </header>

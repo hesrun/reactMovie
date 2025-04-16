@@ -14,8 +14,6 @@ const FilmCarusel = ({ data, type, loading }) => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
 
-    console.log(loading);
-
     return (
         <>
             {loading ? (

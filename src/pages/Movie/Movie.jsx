@@ -1,11 +1,11 @@
-import { BASE_URL, API_KEY } from '../../constants/constants';
+import { BASE_URL, GET_HEADER } from '../../constants/constants';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
-import moviesStore from '../../stores/appStore';
 import ReleaseStatus from '../../components/ui/Release/ReleaseStatus';
 import ActorsCarusel from '../../components/ui/ActorsCarusel/ActorsCarusel';
+import PageError from '../../components/ui/Errors/PageError';
 import Button from '../../components/ui/Button/Button';
 import { H1, H2 } from '../../components/ui/Title/Title';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
@@ -13,16 +13,12 @@ import { FaStar } from 'react-icons/fa';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { GiFilmStrip } from 'react-icons/gi';
-
-const headerGet = {
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`,
-    },
-};
+import favoriteStore from '../../stores/favoriteStore';
+import authStore from '../../stores/authStore';
 
 const Movie = observer(({ type }) => {
     const { id } = useParams();
+
     const movieUrl = `${BASE_URL}/${type}/${id}`;
     const creditsUrl = `${BASE_URL}/${type}/${id}/credits`;
 
@@ -33,11 +29,10 @@ const Movie = observer(({ type }) => {
     const [credits, setCredits] = useState(null);
 
     const toggleFavorite = () => {
-        setIsFavorite(!isFavorite);
         if (!isFavorite) {
-            moviesStore.addToFavorite(movie, type);
+            favoriteStore.addFavorite(authStore.user.id, id, movie, type);
         } else {
-            moviesStore.removeFromFavorite(movie.id);
+            favoriteStore.removeFavorite(authStore.user.id, id);
         }
     };
 
@@ -46,8 +41,8 @@ const Movie = observer(({ type }) => {
             try {
                 setIsLoading(true);
                 const [movieResponse, creditsResponse] = await Promise.all([
-                    axios.get(movieUrl, headerGet),
-                    axios.get(creditsUrl, headerGet),
+                    axios.get(movieUrl, GET_HEADER),
+                    axios.get(creditsUrl, GET_HEADER),
                 ]);
                 setMovie(movieResponse.data);
                 setCredits(creditsResponse.data);
@@ -62,9 +57,9 @@ const Movie = observer(({ type }) => {
 
     useEffect(() => {
         setIsFavorite(
-            moviesStore.favorite.some((item) => item.id === Number(id))
+            favoriteStore.favorites.some((item) => item.favoriteId === id)
         );
-    }, [moviesStore.favorite, id]);
+    }, [favoriteStore.favorites, id]);
 
     if (isLoading)
         return (
@@ -105,42 +100,16 @@ const Movie = observer(({ type }) => {
                             />
                         </div>
                         <div className="mb-4 md:mb-8 flex flex-wrap gap-4">
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
-                            <Skeleton
-                                className="!block h-10 aspect-2/1"
-                                baseColor="rgba(67, 56, 202, 0.2)"
-                                highlightColor="rgba(129, 140, 248, 0.3)"
-                                inline={true}
-                            />
+                            {Array(6)
+                                .fill(0)
+                                .map((item) => (
+                                    <Skeleton
+                                        className="!block h-10 aspect-2/1"
+                                        baseColor="rgba(67, 56, 202, 0.2)"
+                                        highlightColor="rgba(129, 140, 248, 0.3)"
+                                        inline={true}
+                                    />
+                                ))}
                         </div>
                         <div className="mb-4 md:mb-8">
                             <Skeleton
@@ -166,14 +135,14 @@ const Movie = observer(({ type }) => {
                 </div>
             </div>
         );
-    if (error) return <p>{error}</p>;
+    if (error) return <PageError>{error}</PageError>;
     return (
         <>
             <div className="-mt-4 mb-4 md:mb-16 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
                 <div className="-mx-4 md:col-span-6 sm:mx-0 xl:col-span-4">
                     {movie.poster_path ? (
                         <img
-                            className="w-full"
+                            className="w-full md:rounded-2xl"
                             src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
                             alt={movie.original_title}
                         />
@@ -274,22 +243,28 @@ const Movie = observer(({ type }) => {
                             ))}
                         </ul>
                     </div>
-                    <Button
-                        className="w-full md:w-auto"
-                        onClick={toggleFavorite}
-                    >
-                        {!isFavorite ? (
-                            <>
-                                <MdFavoriteBorder className="text-xl" />
-                                Add to Favorite
-                            </>
-                        ) : (
-                            <>
-                                <MdFavorite className="text-xl" />
-                                Remove From Favorite
-                            </>
-                        )}
-                    </Button>
+                    {authStore.isAuth && (
+                        <Button
+                            className="w-full md:w-auto"
+                            onClick={toggleFavorite}
+                        >
+                            {!isFavorite ? (
+                                <>
+                                    <MdFavoriteBorder className="text-xl" />
+                                    {favoriteStore.isLoading
+                                        ? 'Loading...'
+                                        : 'Add to Favorite'}
+                                </>
+                            ) : (
+                                <>
+                                    <MdFavorite className="text-xl" />
+                                    {favoriteStore.isLoading
+                                        ? 'Loading...'
+                                        : 'Remove From Favorite'}
+                                </>
+                            )}
+                        </Button>
+                    )}
                 </div>
             </div>
             {credits && (

@@ -1,51 +1,82 @@
-import { BASE_URL } from '../constants/constants';
-import React, { useEffect, useRef } from 'react';
-import { observer } from 'mobx-react-lite';
-import moviesStore from '../stores/appStore';
+import { BASE_URL, GET_HEADER } from '../constants/constants';
+import React, { useEffect, useState } from 'react';
 import FilmCarusel from '../components/ui/FilmCarusel/FilmCarusel';
 import { H2 } from '../components/ui/Title/Title';
+import axios from 'axios';
+import PageError from '../components/ui/Errors/PageError';
 
-const popularFilmsUrl = `${BASE_URL}/movie/popular`;
-const popularSeriesUrl = `${BASE_URL}/tv/popular`;
-const weeklyTopMoviesUrl = `${BASE_URL}/trending/movie/week`;
-const weeklyTopTVUrl = `${BASE_URL}/trending/tv/week`;
+const homeURLS = [
+    `${BASE_URL}/movie/popular`,
+    `${BASE_URL}/tv/popular`,
+    `${BASE_URL}/trending/movie/week`,
+    `${BASE_URL}/trending/tv/week`,
+];
 
-const Home = observer(() => {
+const Home = () => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [data, setData] = useState({
+        popularFilms: [],
+        popularSeries: [],
+        weeklyFilms: [],
+        weeklySeries: [],
+    });
+
+    const fetchData = async () => {
+        try {
+            setIsLoading(true);
+            const [popularFilms, popularSeries, weeklyFilms, weeklySeries] =
+                await Promise.all(
+                    homeURLS.map((item) => axios.get(item, GET_HEADER))
+                );
+            setData({
+                popularFilms: popularFilms.data.results,
+                popularSeries: popularSeries.data.results,
+                weeklyFilms: weeklyFilms.data.results,
+                weeklySeries: weeklySeries.data.results,
+            });
+        } catch (error) {
+            setError(error.message || 'Something wrong');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        moviesStore.fetchData(popularFilmsUrl, 'popularFilms', 'movie');
-        moviesStore.fetchData(popularSeriesUrl, 'popularSeries', 'tv');
-        moviesStore.fetchData(weeklyTopMoviesUrl, 'weeklyFilms', 'movie');
-        moviesStore.fetchData(weeklyTopTVUrl, 'weeklySeries', 'tv');
+        fetchData();
     }, []);
 
+    if (error) {
+        return <PageError>{error}</PageError>;
+    }
     return (
         <div>
             <H2>Wekly top films</H2>
             <FilmCarusel
-                data={moviesStore.weeklyFilms}
+                data={data.popularFilms}
                 type="movie"
-                loading={moviesStore.isLoading}
+                loading={isLoading}
             ></FilmCarusel>
             <H2>Wekly top TV Show</H2>
             <FilmCarusel
-                data={moviesStore.weeklySeries}
+                data={data.popularSeries}
                 type="tv"
-                loading={moviesStore.isLoading}
+                loading={isLoading}
             ></FilmCarusel>
             <H2>Popular Movies</H2>
             <FilmCarusel
-                data={moviesStore.popularFilms}
+                data={data.weeklyFilms}
                 type="movie"
-                loading={moviesStore.isLoading}
+                loading={isLoading}
             ></FilmCarusel>
             <H2>Popular TV Show</H2>
             <FilmCarusel
-                data={moviesStore.popularSeries}
+                data={data.weeklySeries}
                 type="tv"
-                loading={moviesStore.isLoading}
+                loading={isLoading}
             ></FilmCarusel>
         </div>
     );
-});
+};
 
 export default Home;

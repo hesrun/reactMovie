@@ -1,16 +1,8 @@
-import { API_KEY } from '../constants/constants';
 import { makeAutoObservable } from 'mobx';
+import { GET_HEADER } from '../constants/constants';
 import axios from 'axios';
 
-const headerGet = {
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`,
-    },
-};
-
 class MoviesStore {
-    favorite = [];
     popularFilms = [];
     nowPlayingFilms = [];
     topRatedFilms = [];
@@ -26,21 +18,6 @@ class MoviesStore {
 
     constructor() {
         makeAutoObservable(this);
-    }
-
-    addToFavorite(data, type) {
-        const exists = this.favorite.some((item) => item.id === data.id);
-        if (!exists) {
-            const item = {
-                ...data,
-                type: type,
-            };
-            this.favorite.push(item);
-        }
-    }
-
-    removeFromFavorite(id) {
-        this.favorite = this.favorite.filter((item) => item.id !== id);
     }
 
     async fetchData(url, storeKey, type, append = false) {
@@ -64,7 +41,7 @@ class MoviesStore {
 
         try {
             this.isLoading = true;
-            const response = await axios.get(url, headerGet);
+            const response = await axios.get(url, GET_HEADER);
             const resultsWithType = response.data.results.map((item) => ({
                 ...item,
                 type,

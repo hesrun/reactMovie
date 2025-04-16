@@ -10,6 +10,8 @@ import NotFound from '../pages/NotFound';
 import MoviesLayout from '../pages/Movies/MoviesLayout';
 import Movie from '../pages/Movie/Movie';
 import Movies from '../pages/Movies/Movies';
+import Persons from '../pages/Persons/Persons';
+import Person from '../pages/Person/Person';
 
 const router = createBrowserRouter([
     {
@@ -17,7 +19,6 @@ const router = createBrowserRouter([
         element: <Layout />,
         children: [
             { path: '/', element: <Home /> },
-            { path: '/contacts', element: <Contacts /> },
             {
                 path: '/movie',
                 element: <MoviesLayout />,
@@ -39,7 +40,10 @@ const router = createBrowserRouter([
                     { path: ':id', element: <Movie type="tv" /> },
                 ],
             },
+            { path: '/persons', element: <Persons /> },
+            { path: '/persons/:id', element: <Person /> },
             { path: '/favorite', element: <Favorites /> },
+            { path: '/contacts', element: <Contacts /> },
             { path: '/*', element: <NotFound /> },
         ],
     },
