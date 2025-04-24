@@ -13,7 +13,6 @@ const movieUrl = `${BASE_URL}/search/movie`;
 const tvUrl = `${BASE_URL}/search/tv`;
 
 const Search = () => {
-    const searchRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [search, setSearch] = useState('');
@@ -21,8 +20,8 @@ const Search = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleSearch = () => {
-        setIsOpen(!isOpen);
-        if (searchResult.length > 0) {
+        setIsOpen((prevState) => !prevState);
+        if (searchResult && searchResult.length > 0) {
             setSearchResult(null);
         }
     };
@@ -59,12 +58,6 @@ const Search = () => {
         }
     };
 
-    const handleClickOutside = (e) => {
-        if (searchRef.current && !searchRef.current.contains(e.target)) {
-            setIsOpen(false);
-        }
-    };
-
     useEffect(() => {
         const debounce = setTimeout(() => {
             searchItems();
@@ -74,23 +67,11 @@ const Search = () => {
         };
     }, [search]);
 
-    useEffect(() => {
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-            document.removeEventListener('touchstart', handleClickOutside);
-        };
-    }, []);
-
     return (
         <div className="flex items-center">
             {isOpen && (
                 <>
-                    <div
-                        ref={searchRef}
-                        className="absolute z-20 right-12 h-full top-0 left-4 md:left-40 bg-indigo-950 place-content-center"
-                    >
+                    <div className="absolute z-20 right-12 h-full top-0 left-4 md:left-40 bg-indigo-950 place-content-center">
                         <input
                             onChange={(e) => setSearch(e.target.value)}
                             type="text"
@@ -100,7 +81,7 @@ const Search = () => {
                             className="bg-white/20 w-full rounded-lg px-4 py-1 md:py-2 transition-all"
                         />
                         {searchResult?.length > 0 && (
-                            <div className="fixed md:absolute bg-black/10 left-0 w-full backdrop-blur-2xl rounded-sm space-y-2 p-4 max-h-[50vh] overflow-auto c-scrollbar">
+                            <div className="fixed top-[50px] md:top-[70px] bottom-0 md:bottom-auto md:absolute bg-black/10 left-0 w-full backdrop-blur-2xl rounded-sm space-y-2 p-4 md:max-h-[50vh]  overflow-auto c-scrollbar">
                                 {searchResult?.map((item) => (
                                     <Link
                                         to={`/${item.type}/${item.id}`}
@@ -135,12 +116,13 @@ const Search = () => {
                                 ))}
                             </div>
                         )}
-                        {searchResult && searchResult.length === 0 && (
-                            <div className="fixed md:absolute bg-black/10 left-0 w-full backdrop-blur-2xl rounded-sm py-8 flex items-center gap-4 justify-center">
-                                No search resault{' '}
-                                <FaRegSadCry className="text-2xl" />
-                            </div>
-                        )}
+                        {searchResult !== null &&
+                            searchResult?.length === 0 && (
+                                <div className="fixed top-[50px] md:top-[70px] bottom-0 md:absolute md:bottom-auto bg-black/10 left-0 w-full backdrop-blur-2xl rounded-sm py-8 flex items-center gap-4 justify-center">
+                                    No search resault{' '}
+                                    <FaRegSadCry className="text-2xl" />
+                                </div>
+                            )}
                         {isLoading && (
                             <LuLoaderCircle className="animate-spin absolute right-0 top-1/2 -translate-y-1/2 text-xl" />
                         )}

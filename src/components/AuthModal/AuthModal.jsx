@@ -78,10 +78,10 @@ const AuthModal = observer(() => {
 
     return (
         modalStore.isOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-xl">
+            <div className="fixed p-4 inset-0 z-50 flex items-center justify-center bg-white/10 backdrop-blur-xl">
                 <form
                     onSubmit={signType ? register : signIn}
-                    className="relative bg-indigo-950 w-full max-w-[500px] px-8 py-8 rounded-2xl"
+                    className="relative bg-indigo-950 w-full max-w-[500px] p-4 md:p-8  rounded-2xl"
                 >
                     <button
                         type="button"

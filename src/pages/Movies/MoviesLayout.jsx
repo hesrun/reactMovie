@@ -3,10 +3,12 @@ import { FaChartLine } from 'react-icons/fa';
 import { FaRankingStar } from 'react-icons/fa6';
 import { GiTheater } from 'react-icons/gi';
 import { IoTimerOutline } from 'react-icons/io5';
-import { NavLink, Outlet, useParams } from 'react-router-dom';
+import { IoIosRadio } from 'react-icons/io';
+import { NavLink, Outlet, useLocation, useParams } from 'react-router-dom';
 
 const MoviesLayout = () => {
     const { id } = useParams();
+    const location = useLocation();
 
     const activeLink = ({ isActive }) => {
         return isActive
@@ -17,28 +19,47 @@ const MoviesLayout = () => {
     return (
         <>
             {!id ? (
-                <div className="mb-4 lg:mb-8 flex gap-4 overflow-auto">
-                    <NavLink end to="." className={activeLink}>
-                        <FaChartLine className="text-lg md:text-2xl" />
-                        Popular
-                    </NavLink>
-                    <NavLink to="./now-playing" className={activeLink}>
-                        <GiTheater className="text-lg md:text-2xl" />
-                        Now Playing
-                    </NavLink>
-                    <NavLink to="./top" className={activeLink}>
-                        <FaRankingStar className="text-lg md:text-2xl" />
-                        Top Rated
-                    </NavLink>
-                    <NavLink to="./upcoming" className={activeLink}>
-                        <IoTimerOutline className="text-lg md:text-2xl" />
-                        Upcoming
-                    </NavLink>
-                </div>
+                <>
+                    {location.pathname.includes('/movie') ? (
+                        <div className="mb-4 lg:mb-8 flex gap-4 overflow-auto">
+                            <NavLink end to="." className={activeLink}>
+                                <FaChartLine className="text-lg md:text-2xl" />
+                                Popular
+                            </NavLink>
+                            <NavLink to="./now-playing" className={activeLink}>
+                                <GiTheater className="text-lg md:text-2xl" />
+                                Now Playing
+                            </NavLink>
+                            <NavLink to="./top" className={activeLink}>
+                                <FaRankingStar className="text-lg md:text-2xl" />
+                                Top Rated
+                            </NavLink>
+                            <NavLink to="./upcoming" className={activeLink}>
+                                <IoTimerOutline className="text-lg md:text-2xl" />
+                                Upcoming
+                            </NavLink>
+                        </div>
+                    ) : null}
+                    {location.pathname.includes('/tv') ? (
+                        <div className="mb-4 lg:mb-8 flex gap-4 overflow-auto">
+                            <NavLink end to="." className={activeLink}>
+                                <FaChartLine className="text-lg md:text-2xl" />
+                                Popular
+                            </NavLink>
+                            <NavLink to="./on-air" className={activeLink}>
+                                <IoIosRadio className="text-lg md:text-2xl" />
+                                On The Air
+                            </NavLink>
+                            <NavLink to="./top" className={activeLink}>
+                                <FaRankingStar className="text-lg md:text-2xl" />
+                                Top Rated
+                            </NavLink>
+                        </div>
+                    ) : null}
+                </>
             ) : (
                 <></>
             )}
-
             <Outlet />
         </>
     );

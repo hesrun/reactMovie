@@ -4,8 +4,6 @@ import Layout from '../components/Layout';
 import Home from '../pages/Home';
 import Contacts from '../pages/Contacts';
 import Favorites from '../pages/Favorites';
-import Series from '../pages/Series/Series';
-import SeriesLayout from '../pages/Series/SeriesLayout';
 import NotFound from '../pages/NotFound';
 import MoviesLayout from '../pages/Movies/MoviesLayout';
 import Movie from '../pages/Movie/Movie';
@@ -32,11 +30,11 @@ const router = createBrowserRouter([
             },
             {
                 path: '/tv',
-                element: <SeriesLayout />,
+                element: <MoviesLayout />,
                 children: [
-                    { path: '', element: <Series /> },
-                    { path: 'on-air', element: <Series /> },
-                    { path: 'top', element: <Series /> },
+                    { path: '', element: <Movies /> },
+                    { path: 'on-air', element: <Movies /> },
+                    { path: 'top', element: <Movies /> },
                     { path: ':id', element: <Movie type="tv" /> },
                 ],
             },

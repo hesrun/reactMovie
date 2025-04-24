@@ -102,12 +102,13 @@ const Movie = observer(({ type }) => {
                         <div className="mb-4 md:mb-8 flex flex-wrap gap-4">
                             {Array(6)
                                 .fill(0)
-                                .map((item) => (
+                                .map((_, index) => (
                                     <Skeleton
                                         className="!block h-10 aspect-2/1"
                                         baseColor="rgba(67, 56, 202, 0.2)"
                                         highlightColor="rgba(129, 140, 248, 0.3)"
                                         inline={true}
+                                        key={index}
                                     />
                                 ))}
                         </div>
@@ -121,12 +122,13 @@ const Movie = observer(({ type }) => {
                             <div className="flex flex-wrap gap-4">
                                 {Array(5)
                                     .fill(0)
-                                    .map((_, item) => (
+                                    .map((_, index) => (
                                         <Skeleton
                                             className="!block h-8 aspect-3/1 !rounded-full"
                                             baseColor="rgba(67, 56, 202, 0.2)"
                                             highlightColor="rgba(129, 140, 248, 0.3)"
                                             inline={true}
+                                            key={index}
                                         />
                                     ))}
                             </div>
@@ -182,16 +184,16 @@ const Movie = observer(({ type }) => {
                                 Release Date
                             </span>
                             <div>
-                                {movie.release_date
-                                    ? movie.release_date
-                                    : movie.first_air_date}
+                                {movie?.release_date ||
+                                    movie?.first_air_date ||
+                                    'Unknown'}
                             </div>
                         </div>
                         <div className="flex flex-col">
                             <span className="text-gray-400 text-sm">
-                                {movie.runtime ? 'Duration' : 'Seasons'}
+                                {type === 'movie' ? 'Duration' : 'Seasons'}
                             </span>
-                            {movie.runtime
+                            {type === 'movie'
                                 ? `${Math.floor(movie.runtime / 60)}h ${
                                       movie.runtime % 60
                                   }min`
@@ -267,10 +269,13 @@ const Movie = observer(({ type }) => {
                     )}
                 </div>
             </div>
-            {credits && (
+            {credits?.length > 0 && (
                 <div>
                     <H2>Top Billed Cast</H2>
-                    <ActorsCarusel data={credits.cast.slice(0, 15)} />
+                    <ActorsCarusel
+                        data={credits.cast.slice(0, 15)}
+                        loading={isLoading}
+                    />
                 </div>
             )}
         </>

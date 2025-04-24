@@ -117,12 +117,13 @@ const Person = () => {
                                 <div className="mb-4 md:mb-8 flex flex-wrap gap-4">
                                     {Array(6)
                                         .fill(0)
-                                        .map((item) => (
+                                        .map((_, index) => (
                                             <Skeleton
                                                 className="!block h-10 aspect-2/1"
                                                 baseColor="rgba(67, 56, 202, 0.2)"
                                                 highlightColor="rgba(129, 140, 248, 0.3)"
                                                 inline={true}
+                                                key={index}
                                             />
                                         ))}
                                 </div>
@@ -189,12 +190,14 @@ const Person = () => {
                                     </span>
                                     <div>{formatDate(person.birthday)}</div>
                                 </div>
-                                <div className="flex flex-col">
-                                    <span className="text-gray-400 text-sm">
-                                        Place of Birth
-                                    </span>
-                                    <div>{person.place_of_birth}</div>
-                                </div>
+                                {person.place_of_birth && (
+                                    <div className="flex flex-col">
+                                        <span className="text-gray-400 text-sm">
+                                            Place of Birth
+                                        </span>
+                                        <div>{person.place_of_birth}</div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -216,12 +219,13 @@ const Person = () => {
                     <div className="flex flex-col space-y-3.5">
                         {Array(10)
                             .fill(0)
-                            .map((item) => (
+                            .map((_, index) => (
                                 <Skeleton
                                     className="!block h-24"
                                     baseColor="rgba(67, 56, 202, 0.2)"
                                     highlightColor="rgba(129, 140, 248, 0.3)"
                                     inline={true}
+                                    key={index}
                                 />
                             ))}
                     </div>

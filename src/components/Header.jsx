@@ -1,9 +1,8 @@
 import { observer } from 'mobx-react-lite';
-import moviesStore from '../stores/appStore';
 import authStore from '../stores/authStore';
 import modalStore from '../stores/modalStore';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { IoMenuOutline } from 'react-icons/io5';
 import {
@@ -17,7 +16,21 @@ import Search from './ui/Search/Search';
 import favoriteStore from '../stores/favoriteStore';
 
 const Header = observer(() => {
+    const [ifScrolled, setIfScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 100) {
+                setIfScrolled(true);
+            } else {
+                setIfScrolled(false);
+            }
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const getNavLinkClass = ({ isActive }) =>
         `hover:text-red-600 text-2xl md:text-base ${
@@ -34,7 +47,11 @@ const Header = observer(() => {
     menuOpenClass();
 
     return (
-        <header className="sticky top-0 z-20 bg-indigo-950 ">
+        <header
+            className={`sticky top-0 z-20 bg-indigo-950 ${
+                ifScrolled ? 'shadow-lg shadow-black/20' : ''
+            }`}
+        >
             <div className="container mx-auto flex h-[50px] md:h-[70px] items-center gap-4 relative px-4">
                 <button
                     onClick={menuOpenHandler}
@@ -108,9 +125,11 @@ const Header = observer(() => {
                         <button
                             onClick={() => authStore.logOut()}
                             title="log out"
-                            className="flex items-center gap-2 bg-white/20 rounded-full px-4 py-1 cursor-pointer hover:bg-white/40"
+                            className="flex items-center justify-center gap-2 bg-white/20 rounded-full w-8 h-8 md:w-auto md:h-auto md:px-4 md:py-1 cursor-pointer hover:bg-white/40"
                         >
-                            {authStore.user.username}
+                            <span className="hidden md:block">
+                                {authStore.user.username}
+                            </span>
                             <MdLogout />
                         </button>
                     ) : (
