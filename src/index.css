@@ -3,12 +3,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.swiper-button-disabled {
-    opacity: 0 !important;
-}
-
 .c-scrollbar::-webkit-scrollbar {
-    @apply w-2;
+    @apply w-2 h-2;
 }
 .c-scrollbar::-webkit-scrollbar-track {
     @apply rounded-full bg-white/10;

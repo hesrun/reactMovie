@@ -14,12 +14,12 @@ const ActorsCarusel = ({ data, loading }) => {
                         ))}
                 </div>
             ) : (
-                <div className="relative flex gap-4 overflow-auto c-scrollbar pb-4">
+                <div className="flex gap-4 overflow-auto c-scrollbar pb-4">
                     {data.map((item) => (
                         <Link
                             key={item.id}
                             to={`/persons/${item.id}`}
-                            className="!w-55 block rounded-2xl overflow-hidden bg-white/10 group shrink-0"
+                            className="!w-55 shrink-0 block rounded-2xl overflow-hidden bg-white/10 group "
                         >
                             <div className="aspect-2/3 overflow-hidden">
                                 {item.profile_path ? (
