@@ -66,8 +66,7 @@ You will need to configure API keys to run the app locally.
 3. **Create `.env` file in the root directory**
 
     ```
-    VITE_TMDB_API_KEY=your_tmdb_api_key
-    VITE_MOCKAPI_BASE_URL=your_mockapi_base_url
+    VITE_API_KEY=your_tmdb_api_key
     ```
 
 4. **Run the app in development**
