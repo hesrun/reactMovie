@@ -1,10 +1,10 @@
 import { BASE_URL, GET_HEADER } from '../../constants/constants';
 import React, { useEffect, useState } from 'react';
-import FilmGrid from '../../components/ui/FilmGrid/FilmGrid';
-import Button from '../../components/ui/Button/Button';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { H2 } from '../../components/ui/Title/Title';
-import PageError from '../../components/ui/Errors/PageError';
+import FilmGrid from '../../components/FilmGrid/FilmGrid';
+import Button from '../../ui/Button/Button';
+import { useLocation } from 'react-router-dom';
+import { H2 } from '../../ui/Title/Title';
+import PageError from '../../components/Errors/PageError';
 import axios from 'axios';
 import { CiGrid41 } from 'react-icons/ci';
 
@@ -19,7 +19,6 @@ const Movies = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     const location = useLocation();
-    const [searchParams, setSearchParams] = useSearchParams();
 
     const getToday = () => new Date().toISOString().split('T')[0];
 

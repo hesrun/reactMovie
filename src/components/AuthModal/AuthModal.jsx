@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Button from '../ui/Button/Button';
+import Button from '../../ui/Button/Button';
 import { observer } from 'mobx-react-lite';
 import authStore from '../../stores/authStore';
 import modalStore from '../../stores/modalStore';

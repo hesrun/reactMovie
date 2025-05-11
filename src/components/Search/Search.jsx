@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { IoIosSearch } from 'react-icons/io';
 import { IoMdClose } from 'react-icons/io';
-import { BASE_URL, GET_HEADER } from '../../../constants/constants';
+import { BASE_URL, GET_HEADER } from '../../constants/constants';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FaRegSadCry, FaStar } from 'react-icons/fa';
 import { GiFilmStrip } from 'react-icons/gi';
-import { useRef } from 'react';
 import { LuLoaderCircle } from 'react-icons/lu';
 
 const movieUrl = `${BASE_URL}/search/movie`;

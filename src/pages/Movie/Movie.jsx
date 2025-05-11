@@ -1,13 +1,13 @@
 import { BASE_URL, GET_HEADER } from '../../constants/constants';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
-import ReleaseStatus from '../../components/ui/Release/ReleaseStatus';
-import ActorsCarusel from '../../components/ui/ActorsCarusel/ActorsCarusel';
-import PageError from '../../components/ui/Errors/PageError';
-import Button from '../../components/ui/Button/Button';
-import { H1, H2 } from '../../components/ui/Title/Title';
+import ReleaseStatus from '../../components/Release/ReleaseStatus';
+import ActorsCarusel from '../../components/ActorsCarusel/ActorsCarusel';
+import PageError from '../../components/Errors/PageError';
+import Button from '../../ui/Button/Button';
+import { H1, H2 } from '../../ui/Title/Title';
 import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { FaStar } from 'react-icons/fa';
 import Skeleton from 'react-loading-skeleton';
@@ -15,18 +15,21 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import { GiFilmStrip } from 'react-icons/gi';
 import favoriteStore from '../../stores/favoriteStore';
 import authStore from '../../stores/authStore';
+import ReviewsList from '../../components/ReviewsList/ReviewsList';
 
 const Movie = observer(({ type }) => {
     const { id } = useParams();
 
     const movieUrl = `${BASE_URL}/${type}/${id}`;
     const creditsUrl = `${BASE_URL}/${type}/${id}/credits`;
+    const reviewsURL = `${BASE_URL}/${type}/${id}/reviews`;
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
     const [isFavorite, setIsFavorite] = useState(false);
     const [movie, setMovie] = useState(null);
     const [credits, setCredits] = useState(null);
+    const [reviews, setReviews] = useState(null);
 
     const toggleFavorite = () => {
         if (!isFavorite) {
@@ -35,23 +38,26 @@ const Movie = observer(({ type }) => {
             favoriteStore.removeFavorite(authStore.user.id, id);
         }
     };
-
-    useEffect(() => {
-        const getMovieData = async () => {
-            try {
-                setIsLoading(true);
-                const [movieResponse, creditsResponse] = await Promise.all([
+    const getMovieData = async () => {
+        try {
+            setIsLoading(true);
+            const [movieResponse, creditsResponse, reviewsResponse] =
+                await Promise.all([
                     axios.get(movieUrl, GET_HEADER),
                     axios.get(creditsUrl, GET_HEADER),
+                    axios.get(reviewsURL, GET_HEADER),
                 ]);
-                setMovie(movieResponse.data);
-                setCredits(creditsResponse.data);
-            } catch (error) {
-                setError('Fetch data Error');
-            } finally {
-                setIsLoading(false);
-            }
-        };
+            setMovie(movieResponse.data);
+            setCredits(creditsResponse.data);
+            setReviews(reviewsResponse.data);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
         getMovieData();
     }, [id]);
 
@@ -138,144 +144,155 @@ const Movie = observer(({ type }) => {
             </div>
         );
     if (error) return <PageError>{error}</PageError>;
+
     return (
         <>
-            <div className="-mt-4 mb-4 md:mb-16 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
-                <div className="-mx-4 md:col-span-6 sm:mx-0 xl:col-span-4">
-                    {movie.poster_path ? (
-                        <img
-                            className="w-full md:rounded-2xl"
-                            src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
-                            alt={movie.original_title}
-                        />
-                    ) : (
-                        <div className="aspect-2/3 bg-indigo-500/30 md:rounded-2xl flex">
-                            <GiFilmStrip className="m-auto text-6xl lg:text-8xl opacity-30" />
-                        </div>
-                    )}
-                </div>
-                <div className="md:col-span-6 xl:col-span-8">
-                    <H1>
-                        {movie.original_title
-                            ? movie.original_title
-                            : movie.name}
-                    </H1>
-                    <div className="mb-4 md:mb-8">{movie.overview}</div>
-                    <div className="mb-4 md:mb-8 grid grid-cols-3 gap-4 xl:flex xl:gap-8">
-                        <div className="flex flex-col">
-                            <span className="text-gray-400 text-sm">
-                                Rating
-                            </span>
-                            <span className="flex items-center gap-2">
-                                {movie.vote_average.toFixed(1)}
-                                <FaStar className="text-amber-500" />
-                            </span>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-gray-400 text-sm">
-                                Status
-                            </span>
-                            <ReleaseStatus type={movie.status}>
-                                {movie.status}
-                            </ReleaseStatus>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-gray-400 text-sm">
-                                Release Date
-                            </span>
-                            <div>
-                                {movie?.release_date ||
-                                    movie?.first_air_date ||
-                                    'Unknown'}
+            {movie && (
+                <div className="-mt-4 mb-4 md:mb-16 grid gap-4 md:mt-0 md:gap-16 md:grid-cols-12">
+                    <div className="-mx-4 md:col-span-6 sm:mx-0 xl:col-span-4">
+                        {movie.poster_path ? (
+                            <img
+                                className="w-full md:rounded-2xl"
+                                src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                alt={movie.original_title}
+                            />
+                        ) : (
+                            <div className="aspect-2/3 bg-indigo-500/30 md:rounded-2xl flex">
+                                <GiFilmStrip className="m-auto text-6xl lg:text-8xl opacity-30" />
                             </div>
-                        </div>
-                        <div className="flex flex-col">
-                            <span className="text-gray-400 text-sm">
-                                {type === 'movie' ? 'Duration' : 'Seasons'}
-                            </span>
-                            {type === 'movie'
-                                ? `${Math.floor(movie.runtime / 60)}h ${
-                                      movie.runtime % 60
-                                  }min`
-                                : movie.number_of_seasons}
-                        </div>
-                        {movie.budget ? (
+                        )}
+                    </div>
+                    <div className="md:col-span-6 xl:col-span-8">
+                        <H1>
+                            {movie.original_title
+                                ? movie.original_title
+                                : movie.name}
+                        </H1>
+                        <div className="mb-4 md:mb-8">{movie.overview}</div>
+                        <div className="mb-4 md:mb-8 grid grid-cols-3 gap-4 xl:flex xl:gap-8">
                             <div className="flex flex-col">
                                 <span className="text-gray-400 text-sm">
-                                    Budget
+                                    Rating
+                                </span>
+                                <span className="flex items-center gap-2">
+                                    {movie.vote_average.toFixed(1)}
+                                    <FaStar className="text-amber-500" />
+                                </span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-sm">
+                                    Status
+                                </span>
+                                <ReleaseStatus type={movie.status}>
+                                    {movie.status}
+                                </ReleaseStatus>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-sm">
+                                    Release Date
                                 </span>
                                 <div>
-                                    {movie.budget > 0
-                                        ? `$ ${movie.budget.toLocaleString(
-                                              'en-US'
-                                          )}`
-                                        : 'Unknoun'}
+                                    {movie?.release_date ||
+                                        movie?.first_air_date ||
+                                        'Unknown'}
                                 </div>
                             </div>
-                        ) : null}
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-sm">
+                                    {type === 'movie' ? 'Duration' : 'Seasons'}
+                                </span>
+                                {type === 'movie'
+                                    ? `${Math.floor(movie.runtime / 60)}h ${
+                                          movie.runtime % 60
+                                      }min`
+                                    : movie.number_of_seasons}
+                            </div>
+                            {movie.budget ? (
+                                <div className="flex flex-col">
+                                    <span className="text-gray-400 text-sm">
+                                        Budget
+                                    </span>
+                                    <div>
+                                        {movie.budget > 0
+                                            ? `$ ${movie.budget.toLocaleString(
+                                                  'en-US'
+                                              )}`
+                                            : 'Unknoun'}
+                                    </div>
+                                </div>
+                            ) : null}
 
-                        <div className="flex flex-col">
-                            <span className="text-gray-400 text-sm">
-                                {movie.revenue !== undefined
-                                    ? 'Revenue'
-                                    : 'Type'}
-                            </span>
-                            <div>
-                                {movie.revenue > 0
-                                    ? `$ ${movie.revenue.toLocaleString(
-                                          'en-US'
-                                      )}`
-                                    : movie.revenue === 0
-                                    ? 'Unknown'
-                                    : movie.type || 'Unknown'}
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-sm">
+                                    {movie.revenue !== undefined
+                                        ? 'Revenue'
+                                        : 'Type'}
+                                </span>
+                                <div>
+                                    {movie.revenue > 0
+                                        ? `$ ${movie.revenue.toLocaleString(
+                                              'en-US'
+                                          )}`
+                                        : movie.revenue === 0
+                                        ? 'Unknown'
+                                        : movie.type || 'Unknown'}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="mb-4 md:mb-8">
-                        Genres:
-                        <ul className="flex flex-wrap gap-2 mt-2">
-                            {movie.genres.map((item) => (
-                                <li
-                                    className="bg-gradient-to-r from-violet-900 to-fuchsia-900 rounded-2xl tracking-wide uppercase text-sm px-5 py-1
+                        <div className="mb-4 md:mb-8">
+                            Genres:
+                            <ul className="flex flex-wrap gap-2 mt-2">
+                                {movie.genres.map((item) => (
+                                    <li
+                                        className="bg-gradient-to-r from-violet-900 to-fuchsia-900 rounded-2xl tracking-wide uppercase text-sm px-5 py-1
 "
-                                    key={item.id}
-                                >
-                                    {item.name}
-                                </li>
-                            ))}
-                        </ul>
+                                        key={item.id}
+                                    >
+                                        {item.name}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        {authStore.isAuth && (
+                            <Button
+                                className="w-full md:w-auto"
+                                onClick={toggleFavorite}
+                            >
+                                {!isFavorite ? (
+                                    <>
+                                        <MdFavoriteBorder className="text-xl" />
+                                        {favoriteStore.isLoading
+                                            ? 'Loading...'
+                                            : 'Add to Favorite'}
+                                    </>
+                                ) : (
+                                    <>
+                                        <MdFavorite className="text-xl" />
+                                        {favoriteStore.isLoading
+                                            ? 'Loading...'
+                                            : 'Remove From Favorite'}
+                                    </>
+                                )}
+                            </Button>
+                        )}
                     </div>
-                    {authStore.isAuth && (
-                        <Button
-                            className="w-full md:w-auto"
-                            onClick={toggleFavorite}
-                        >
-                            {!isFavorite ? (
-                                <>
-                                    <MdFavoriteBorder className="text-xl" />
-                                    {favoriteStore.isLoading
-                                        ? 'Loading...'
-                                        : 'Add to Favorite'}
-                                </>
-                            ) : (
-                                <>
-                                    <MdFavorite className="text-xl" />
-                                    {favoriteStore.isLoading
-                                        ? 'Loading...'
-                                        : 'Remove From Favorite'}
-                                </>
-                            )}
-                        </Button>
-                    )}
                 </div>
-            </div>
-            {credits?.length > 0 && (
+            )}
+            {reviews?.results.length > 0 && (
+                <div className="mb-4 md:mb-16">
+                    <ReviewsList data={reviews.results.slice(0, 1)} />
+                    <Link
+                        className="cursor-pointer text-red-500 underline hover:text-red-500/70"
+                        to="reviews"
+                    >
+                        Go to all reviews
+                    </Link>
+                </div>
+            )}
+            {credits?.cast.length > 0 && (
                 <div>
-                    <H2>Top Billed Cast</H2>
-                    <ActorsCarusel
-                        data={credits.cast.slice(0, 15)}
-                        loading={isLoading}
-                    />
+                    <H2>Billed Cast</H2>
+                    <ActorsCarusel data={credits.cast} loading={isLoading} />
                 </div>
             )}
         </>

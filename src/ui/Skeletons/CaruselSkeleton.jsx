@@ -3,7 +3,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 
 const CaruselSkeleton = () => {
     return (
-        <div className="!w-45 block rounded-2xl overflow-hidden bg-white/10 shrink-0">
+        <div className="!w-40 md:!w-55 block rounded-2xl overflow-hidden bg-white/10 shrink-0">
             <Skeleton
                 className="!block aspect-2/3"
                 baseColor="rgba(67, 56, 202, 0.2)"

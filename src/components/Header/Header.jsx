@@ -1,6 +1,7 @@
 import { observer } from 'mobx-react-lite';
-import authStore from '../stores/authStore';
-import modalStore from '../stores/modalStore';
+import authStore from '../../stores/authStore';
+import modalStore from '../../stores/modalStore';
+import favoriteStore from '../../stores/favoriteStore';
 
 import React, { useEffect, useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
@@ -12,8 +13,7 @@ import {
     MdLogout,
 } from 'react-icons/md';
 import { Link, NavLink } from 'react-router-dom';
-import Search from './ui/Search/Search';
-import favoriteStore from '../stores/favoriteStore';
+import Search from '../Search/Search';
 
 const Header = observer(() => {
     const [ifScrolled, setIfScrolled] = useState(false);

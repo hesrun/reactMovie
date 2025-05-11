@@ -1,6 +1,5 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import PersonsGridSkeleton from '../Skeletons/PersonsGridSkeleton';
+import PersonsGridSkeleton from '../../ui/Skeletons/PersonsGridSkeleton';
 
 const PersonsGrid = ({ data, loading }) => {
     return (

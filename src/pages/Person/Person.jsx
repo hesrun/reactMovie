@@ -1,9 +1,9 @@
 import { BASE_URL, GET_HEADER } from '../../constants/constants';
-import { H1, H2 } from '../../components/ui/Title/Title';
+import { H1, H2 } from '../../ui/Title/Title';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import PageError from '../../components/ui/Errors/PageError';
+import PageError from '../../components/Errors/PageError';
 import { CiUser } from 'react-icons/ci';
 import { RiMovie2AiLine } from 'react-icons/ri';
 import Skeleton from 'react-loading-skeleton';

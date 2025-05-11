@@ -1,10 +1,10 @@
 import { BASE_URL, GET_HEADER } from '../../constants/constants';
-import { H2 } from '../../components/ui/Title/Title';
+import { H2 } from '../../ui/Title/Title';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import PersonsGrid from '../../components/ui/PersonsGrid/PersonsGrid';
-import Button from '../../components/ui/Button/Button';
-import PageError from '../../components/ui/Errors/PageError';
+import PersonsGrid from '../../components/PersonsGrid/PersonsGrid';
+import Button from '../../ui/Button/Button';
+import PageError from '../../components/Errors/PageError';
 
 const Persons = () => {
     const [isLoading, setIsLoading] = useState(false);

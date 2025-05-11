@@ -6,11 +6,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 import React, { useRef } from 'react';
-import { CiUser } from 'react-icons/ci';
+import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import CaruselSkeleton from '../Skeletons/CaruselSkeleton';
+import CaruselSkeleton from '../../ui/Skeletons/CaruselSkeleton';
 
-const ActorsCarusel = ({ data, loading }) => {
+const FilmCarusel = ({ data, type, loading }) => {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
 
@@ -38,41 +38,41 @@ const ActorsCarusel = ({ data, loading }) => {
                             swiper.params.navigation.prevEl = prevRef.current;
                             swiper.params.navigation.nextEl = nextRef.current;
                         }}
-                        className="!pb-4"
                     >
-                        {data.map((item) => (
+                        {data?.map((item) => (
                             <SwiperSlide
                                 key={item.id}
-                                className="!w-40 md:!w-45"
+                                className="!w-45 !h-auto"
                             >
                                 <Link
-                                    to={`/persons/${item.id}`}
-                                    className="block rounded-2xl overflow-hidden bg-white/10 group"
+                                    to={`${type}/${item.id}`}
+                                    href=""
+                                    className="block rounded-2xl overflow-hidden bg-white/10 relative h-full group"
                                 >
-                                    <div className="aspect-2/3 overflow-hidden">
-                                        {item.profile_path ? (
+                                    {item.poster_path ? (
+                                        <div className="overflow-hidden">
                                             <img
-                                                className="aspect-2/3 object-cover group-hover:scale-110 transition-transform"
-                                                src={`https://image.tmdb.org/t/p/w300/${item.profile_path}`}
-                                                alt={item.original_name}
+                                                className="w-full aspect-2/3 object-cover group-hover:scale-110 transition-transform"
+                                                src={`https://image.tmdb.org/t/p/w300/${item.poster_path}`}
+                                                alt=""
                                             />
-                                        ) : (
-                                            <div className="w-full h-full flex flex-col justify-center items-center  gap-4 bg-black">
-                                                <CiUser className="text-7xl" />
-                                                <span className="uppercase text-sm">
-                                                    no photo
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="px-4 py-2">
-                                        <div className="text-sm md:text-lg">
-                                            {item.name}
                                         </div>
-                                        <span className="text-xs md:text-sm">
-                                            {item.character}
+                                    ) : (
+                                        <div className="aspect-2/3 uppercase text-center content-center bg-violet-900">
+                                            no <br /> title
+                                        </div>
+                                    )}
+                                    <div className="text-sm px-4 py-2">
+                                        <span>
+                                            {item.title
+                                                ? item.title
+                                                : item.name}
                                         </span>
                                     </div>
+                                    <span className="absolute top-2 right-2 bg-gray-900 text-xs flex items-center rounded-2xl py-1 px-2 gap-1">
+                                        <FaStar className="text-orange-400" />
+                                        {item.vote_average.toFixed(1)}
+                                    </span>
                                 </Link>
                             </SwiperSlide>
                         ))}
@@ -95,4 +95,4 @@ const ActorsCarusel = ({ data, loading }) => {
     );
 };
 
-export default ActorsCarusel;
+export default FilmCarusel;

@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
-import { H2 } from '../components/ui/Title/Title';
-import Filmgrid from '../components/ui/FilmGrid/FilmGrid';
+import { H2 } from '../../ui/Title/Title';
+import Filmgrid from '../../components/FilmGrid/FilmGrid';
 import { observer } from 'mobx-react-lite';
 import { MdFavoriteBorder } from 'react-icons/md';
 
-import favoriteStore from '../stores/favoriteStore';
-import authStore from '../stores/authStore';
+import favoriteStore from '../../stores/favoriteStore';
+import authStore from '../../stores/authStore';
 import { useNavigate } from 'react-router-dom';
+
 const Favorites = observer(() => {
     const navigate = useNavigate();
     useEffect(() => {

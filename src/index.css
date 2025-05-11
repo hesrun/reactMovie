@@ -14,7 +14,7 @@
     @apply rounded-full bg-white/10;
 }
 .c-scrollbar::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-white/30;
+    @apply rounded-full bg-white/30 cursor-pointer;
 }
 .c-scrollbar::-webkit-scrollbar-thumb:hover {
     @apply rounded-full bg-white/60;

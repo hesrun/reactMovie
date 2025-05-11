@@ -1,9 +1,9 @@
-import { BASE_URL, GET_HEADER } from '../constants/constants';
+import { BASE_URL, GET_HEADER } from '../../constants/constants';
 import React, { useEffect, useState } from 'react';
-import FilmCarusel from '../components/ui/FilmCarusel/FilmCarusel';
-import { H2 } from '../components/ui/Title/Title';
+import FilmCarusel from '../../components/FilmCarusel/FilmCarusel';
+import { H2 } from '../../ui/Title/Title';
 import axios from 'axios';
-import PageError from '../components/ui/Errors/PageError';
+import PageError from '../../components/Errors/PageError';
 
 const homeURLS = [
     `${BASE_URL}/movie/popular`,

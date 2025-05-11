@@ -1,8 +1,7 @@
-import React from 'react';
 import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
-import FilmsGridSkeleton from '../Skeletons/FilmsGridSkeleton';
+import FilmsGridSkeleton from '../../ui/Skeletons/FilmsGridSkeleton';
 
 const FilmGrid = ({ data, loading }) => {
     return (
